@@ -4,7 +4,7 @@ A development environment for [Bitcoinnews](https://github.com/zhenkyle/bitcoinn
 
 ## Prerequisites
 
-You will need the following applications to setup the Ghost development environment:
+You will need the following applications to setup the Bitcoinnews development environment:
 
 - [Vagrant](http://www.vagrantup.com/downloads.html)
 - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
@@ -13,14 +13,14 @@ You will need the following applications to setup the Ghost development environm
 
 ## Setup
 
-To get started with the Ghost development environment, you will first need to clone this repo and navigate into it:
+To get started with the Bitcoinnews development environment, you will first need to clone this repo and navigate into it:
 
 ```bash
 git clone git://github.com/zhenkyle/Bitcoinnews-Vagrant.git
 cd Bitcoinnews-Vagrant
 ```
 
-You will now need a copy of Ghost itself:
+You will now need a copy of Bitcoinnews itself:
 
 ```bash
 git clone git://github.com/zhenkyle/bitcoinnews_source.git
