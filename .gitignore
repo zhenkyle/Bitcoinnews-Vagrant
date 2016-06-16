@@ -1,0 +1,12 @@
+.vagrant
+.DS_Store
+vm_config.yml
+
+.idea/*
+*.iml
+projectFilesBackup
+
+.tmp
+.librarian
+modules/*
+!modules/.gitkeep
