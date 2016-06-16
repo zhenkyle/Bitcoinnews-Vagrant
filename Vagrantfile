@@ -6,6 +6,16 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
+  # in case if you need proxy 
+  # export http_proxy=http://10.0.2.3:8123
+  # export https_proxy=http://10.0.2.3:8123
+  # vagrant plugin install vagrant-proxyconf
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    config.proxy.http     = "http://192.168.33.1:8123/"
+    config.proxy.https    = "http://192.168.33.1:8123/"
+    config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  end
+
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
@@ -28,7 +38,7 @@ Vagrant.configure("2") do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "private_network", ip: "192.168.33.10"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -66,8 +76,16 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y apache2
-  # SHELL
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+    apt-get install -y git
+    gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+    curl -L https://get.rvm.io | bash -s stable --ruby
+    source /home/vagrant/.rvm/scripts/rvm
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.1/install.sh | bash
+    source /home/vagrant/.bashrc
+    nvm install node
+    git clone https://github.com/zhenkyle/bitcoinnews_source.git
+    cd bitcoinnews_source && gem install bundle && bundle install && rake install && rake generate && rake preview
+  SHELL
 end
