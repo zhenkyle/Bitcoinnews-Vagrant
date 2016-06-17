@@ -20,12 +20,6 @@ git clone git://github.com/zhenkyle/Bitcoinnews-Vagrant.git
 cd Bitcoinnews-Vagrant
 ```
 
-You will now need a copy of Bitcoinnews itself:
-
-```bash
-git clone git://github.com/zhenkyle/bitcoinnews_source.git
-```
-
 Now we have both repos cloned, we can proceed with setting up the VM:
 
 ```bash
@@ -39,8 +33,15 @@ vagrant ssh
 
 # When logged into the VM...
 
-cd code/Bitcoinnews
+cd octopress
+rake generate
+rake preview
 ```
+
+Access `http://127.0.0.1:4000` from your host.
+
+Inspired by https://github.com/arekczarny/vagrant-octopress-env/
+
 ## Copyright & License
 
 Copyright (c) 2016 Zhenkyle - Released under the [MIT license](LICENSE).

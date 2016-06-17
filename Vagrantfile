@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
   if Vagrant.has_plugin?("vagrant-proxyconf")
     config.proxy.http     = "http://192.168.33.1:8123/"
     config.proxy.https    = "http://192.168.33.1:8123/"
-    config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+    config.proxy.no_proxy = "localhost,127.0.0.1,10.*.*.*,192.168.*.*,.example.com"
   end
 
   # The most common configuration options are documented and commented below.
@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 4000, :guest_ip => "0.0.0.0", host: 4000, :host_ip => "127.0.0.1"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder "./octopress", "/home/vagrant/octopress"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -76,16 +76,16 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
-    apt-get update
-    apt-get install -y git
+  config.vm.provision "shell", privileged:false, inline: <<-SHELL
+    sudo apt-get update && sudo apt-get install -y git
     gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
     curl -L https://get.rvm.io | bash -s stable --ruby
     source /home/vagrant/.rvm/scripts/rvm
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.1/install.sh | bash
-    source /home/vagrant/.bashrc
+    source /home/vagrant/.nvm/nvm.sh
     nvm install node
-    git clone https://github.com/zhenkyle/bitcoinnews_source.git
-    cd bitcoinnews_source && gem install bundle && bundle install && rake install && rake generate && rake preview
+    git clone https://github.com/zhenkyle/bitcoinnews_source.git octopress
+    sed -i '/--port/c\  rackupPid = Process.spawn("rackup --host 0.0.0.0 --port #{server_port}")' octopress/Rakefile
+    cd octopress && gem install bundle && bundle install && rake generate && rake preview
   SHELL
 end
